@@ -7,7 +7,7 @@ using namespace std;
 
 #define MAX_NUM 100000001
 
-bitset<MAX_NUM> primes;
+bool primes[MAX_NUM];
 
 int sieving_primes[1229];
 int sieving_prime_index = 0;
@@ -15,7 +15,7 @@ int sieving_prime_index = 0;
 std::mutex retrieving_index;
 std::mutex writingTo_bitset;
 
-void concurrent_eratosthenes(int thread_num) {
+void concurrent_eratosthenes() {
     bool running = true;
     while(running) {
 
@@ -25,22 +25,17 @@ void concurrent_eratosthenes(int thread_num) {
             retrieving_index.unlock();
             break;
         } 
-        cout << "Thread " << thread_num << " retrieved index: " << sieving_prime_index <<": " << sieving_primes[sieving_prime_index] << '\n';
         int index = sieving_prime_index;
         sieving_prime_index++;
         retrieving_index.unlock();
 
-/*
+
         int sieving_prime = sieving_primes[index];
 
         for(unsigned long long int i = sieving_prime*sieving_prime; i < MAX_NUM; i += sieving_prime) {
-
-            //writingTo_bitset.lock();
-            //cout << "Thread" << thread_num << "writing to index: " << i << '\n';
-            primes[i] == 1;
-            //writingTo_bitset.unlock();
+            primes[i] = false;
         }
-*/
+
     }
 }
 
@@ -71,19 +66,9 @@ void sequencial_eratosthenes(int n)
 void print_count(){
     int count = 0;
     
-    for(int i = 2; i < 50; i++) {
-        //if(primes[i] == 0) {
-            count++;
-            cout << primes[i] << '\n';
-        //}
-    }
-
-    count = 0;
-
     for(int i = 2; i < MAX_NUM; i++) {
-        if(primes[i] == 0) {
+        if(primes[i] == true) {
             count++;
-            //cout << i << '\n';
         }
     }
 
@@ -96,15 +81,17 @@ int main() {
     auto start = std::chrono::steady_clock::now();    
     
     sequencial_eratosthenes(10000);
+
+    memset(primes, true, sizeof(primes));
     
-    std::thread t1(concurrent_eratosthenes, 1);
-    std::thread t2(concurrent_eratosthenes, 2);
-    std::thread t3(concurrent_eratosthenes, 3);
-    std::thread t4(concurrent_eratosthenes, 4);
-    std::thread t5(concurrent_eratosthenes, 5);
-    std::thread t6(concurrent_eratosthenes, 6);
-    std::thread t7(concurrent_eratosthenes, 7);
-    std::thread t8(concurrent_eratosthenes, 8); 
+    std::thread t1(concurrent_eratosthenes);
+    std::thread t2(concurrent_eratosthenes);
+    std::thread t3(concurrent_eratosthenes);
+    std::thread t4(concurrent_eratosthenes);
+    std::thread t5(concurrent_eratosthenes);
+    std::thread t6(concurrent_eratosthenes);
+    std::thread t7(concurrent_eratosthenes);
+    std::thread t8(concurrent_eratosthenes); 
 
     t1.join();
     t2.join();
@@ -115,7 +102,7 @@ int main() {
     t7.join();
     t8.join();
 
-    //print_count();
+    print_count();
 
     auto finish = std::chrono::steady_clock::now();
     
