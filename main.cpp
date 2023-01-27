@@ -63,17 +63,24 @@ void sequencial_eratosthenes(int n)
     }
 }
 
-void print_count(){
-    int count = 0;
+void obtain_info(int *count_out, unsigned long long int *sum_out, int (&last_ten_out)[10]){
+    //int count = 0;
+    int amount = 5761455;
+    //int last_ten[10] = {0};
+    int last_ten_index = 0;
+    //unsigned long long int sum = 0;
     
     for(int i = 2; i < MAX_NUM; i++) {
         if(primes[i] == true) {
-            count++;
+            amount--;
+            *sum_out += i;
+            *count_out = *count_out + 1;
+            if(amount < 10) {
+                last_ten_out[last_ten_index] = i;
+                last_ten_index++;
+            }
         }
     }
-
-    cout << count << '\n';
-
 }
 
 
@@ -81,6 +88,9 @@ int main() {
 
     memset(sieving_primes, 0, sizeof(sieving_primes));
     memset(primes, true, sizeof(primes));
+    int count_in = 0;
+    unsigned long long int sum_in = 0;
+    int last_ten_in[10] = {0};
 
     auto start = std::chrono::steady_clock::now();    
     sequencial_eratosthenes(10000);
@@ -102,10 +112,12 @@ int main() {
     t7.join();
     t8.join();
 
-    print_count();
-
+    obtain_info(&count_in, &sum_in, last_ten_in);
     auto finish = std::chrono::steady_clock::now();
-    
     double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();
-    cout << elapsed_seconds << '\n';
+    cout << elapsed_seconds << ' ' << count_in << ' ' << sum_in <<'\n';
+    for(int i = 0; i < 10; i++) {
+        cout << last_ten_in[i] << ' ';
+    }
+    cout << '\n';
 }
