@@ -78,12 +78,12 @@ void print_count(){
 
 
 int main() {
-    auto start = std::chrono::steady_clock::now();    
-    
-    sequencial_eratosthenes(10000);
 
+    memset(sieving_primes, 0, sizeof(sieving_primes));
     memset(primes, true, sizeof(primes));
-    
+
+    auto start = std::chrono::steady_clock::now();    
+    sequencial_eratosthenes(10000);
     std::thread t1(concurrent_eratosthenes);
     std::thread t2(concurrent_eratosthenes);
     std::thread t3(concurrent_eratosthenes);
