@@ -25,6 +25,13 @@ Once the program is executed, it will take a short time to calculate the primes 
 
 On my personal laptop (Intel® Core™ i7-1065G7 CPU @ 1.30GHz × 8). Calculating these values for the primes from 0 to 100 million takes in average 0.60 seconds using this program.
 
+You can find a sample output for the program in _primes.txt_. The format is the following.
+
+```
+<Execution time in seconds> <Count> <Sum>
+<Last then primes found in ascending order>.
+```
+
 ## __Efficiency__
 
 Like I just mentioned, the program will take only about 0.60 seconds to run on my computer, sometimes yeilding times as low as half a second. In addition, if the program does not calculate the sum and count at the end, but rather just sieves the composite numbers, it will run in almost half that time.
